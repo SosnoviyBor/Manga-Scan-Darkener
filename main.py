@@ -32,25 +32,26 @@ def main():
 
 
 def parse_images(browser:webbrowser.BaseBrowser, images:list):
+    window = WindowManager()
     for _ in range(config.ITERANTIONS):
         for image_id in images:
             image_png = config.WORKFOLDER + image_id + ".png"
             image_psd = config.WORKFOLDER + image_id + ".psd"
             
-            # Открыть ПСД в фотошопе
-            os.startfile(image_psd)
-            time.sleep(.5)
-            
             # Открыть ПНГ в браузере и скопировать его
             browser.open(image_png)
+            window.find_window_wildcard(f"{image_id}.png*")
+            window.set_foreground()
+            time.sleep(.5)
             setCursorPos(config.MouseCoordinates.CENTER)
             rightClick()
             setCursorPos(config.MouseCoordinates.CONTEXT_MENU_COPY_BUTTON)
             leftClick()
             press(config.KeyInputs.CLOSE_TAB, .1)
             
-            # Открыть окно фотошопа
-            window = WindowManager()
+            # Открыть ПСД в фотошопе
+            os.startfile(image_psd)
+            time.sleep(.5)
             window.find_window_wildcard(f"{image_id}.psd*")
             window.set_foreground()
             
